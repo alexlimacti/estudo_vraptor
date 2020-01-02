@@ -10,7 +10,7 @@
 |  04 Controlando o resultado		   |    OK     |
 |  05 Injeção de dependências          |    OK     |
 |  06 Validação                        |    OK     |
-|  07 AJAX por páginas mais dinâmicas  |           |
+|  07 AJAX por páginas mais dinâmicas  |    OK     |
 
 ## Descrição do projeto
 Projeto baseado em uma loja virtual
