@@ -5,6 +5,15 @@
 <html>
 	<head>
 		<meta charset="ISO-8859-1">
+		<script type="text/javascript" src="<c:url value="/js/jquery-1.6.1.min.js" />"></script>
+		<script type="text/javascript">
+			function remove(id){
+				$.get('remove?produto.id=' + id, function(){
+					alert('produto removido com sucesso');
+					$('#produto-'+id).remove();
+				});
+			}
+		</script>
 		<title>Lista de Produtos</title>
 	</head>
 	<body>
@@ -13,10 +22,11 @@
 		
 		<table>
 			<c:forEach var="produto" items="${produtoList}">
-				<tr>
+				<tr id="produto-${produto.id}">
 					<td>${produto.nome}</td>
 					<td>${produto.descricao}</td>
 					<td>${produto.preco}</td>
+					<td><a href="" onclick="remove(${produto.id}); return false;">Remove</a></td>
 				</tr>
 			</c:forEach>
 		</table>

@@ -89,5 +89,10 @@ public class ProdutoController {
 		 */
 		result.use(Results.json()).from(produto).serialize();
 	}
+	
+	public void remove(Produto produto) {
+		produtos.remove(produto);
+		result.nothing();
+	}
 
 }
