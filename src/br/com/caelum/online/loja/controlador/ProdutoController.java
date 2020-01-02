@@ -2,23 +2,28 @@ package br.com.caelum.online.loja.controlador;
 
 import java.util.List;
 
-import br.com.caelum.online.loja.dao.ProdutoDao;
 import br.com.caelum.online.loja.dominio.Produto;
+import br.com.caelum.online.loja.repositorio.RepositorioDeProdutos;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
+import br.com.caelum.vraptor.validator.ValidationMessage;
+import br.com.caelum.vraptor.validator.Validations;
 import br.com.caelum.vraptor.view.Results;
 
 @Resource
 public class ProdutoController {
 	
-	private final ProdutoDao produtos;
+	private final RepositorioDeProdutos produtos;
 	private final Result result;
+	private final Validator validator;
 
-	public ProdutoController(Result result) {
+	public ProdutoController(Result result, RepositorioDeProdutos produtos, Validator validator) {
 		this.result = result;
-		this.produtos = new ProdutoDao();
+		this.produtos = produtos;
+		this.validator = validator;
 	}
 	
 	public List<Produto> lista() {
@@ -30,8 +35,26 @@ public class ProdutoController {
 	}
 	
 	@Post
-	public void adiciona(Produto produto) {
-		produtos.salva(produto);
+	public void adiciona(final Produto produto) {
+		
+		/*
+		 * Trata a validacao dos erros sem insercao de varios if's
+		 * Foi criado um arquivo messages.properties onde as mensagens são validadas
+		 */
+		validator.checking(new Validations() {
+			{
+				that(produto.getPreco()> 0.1, "erro", "produto.preco.invalido");
+			}
+		});
+		
+		/*
+		if(produto.getPreco() < 0.1) {
+			validator.add(new ValidationMessage("O preço deve ser maior do que R$ 0.1", "preco"));
+		}
+		*/
+		validator.onErrorUsePageOf(ProdutoController.class).formulario();
+		
+		this.produtos.salva(produto);
 		
 		/*
 		 * Adiciona uma mensagem no resultado da requisição
